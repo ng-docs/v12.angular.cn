@@ -347,7 +347,7 @@ import { Hero } from './hero';
   ]
 })
 export class HeroListAutoComponent {
-   @Input() heroes: Hero[];
+   @Input() heroes: Hero[] = [];
 
    @Output() remove = new EventEmitter<number>();
 
@@ -431,7 +431,7 @@ import { Hero } from './hero';
   ]
 })
 export class HeroListEnterLeaveComponent {
-  @Input() heroes: Hero[];
+  @Input() heroes: Hero[] = [];
 
   @Output() remove = new EventEmitter<number>();
 
@@ -535,7 +535,7 @@ import { Hero } from './hero';
   ]
 })
 export class HeroListGroupsComponent {
-   @Input() heroes: Hero[];
+   @Input() heroes: Hero[] = [];
 
    @Output() remove = new EventEmitter<number>();
 
@@ -553,6 +553,7 @@ can be found in the LICENSE file at https://angular.io/license
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { trigger, transition, animate, style, query, stagger } from '@angular/animations';
 import { HEROES } from './mock-heroes';
+import { Hero } from './hero';
 
 @Component({
   selector: 'app-hero-list-page',
@@ -595,7 +596,7 @@ export class HeroListPageComponent implements OnInit {
 
   heroTotal = -1;
   get heroes() { return this._heroes; }
-  private _heroes = [];
+  private _heroes: Hero[] = [];
 
   ngOnInit() {
     this._heroes = HEROES;
@@ -1574,6 +1575,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

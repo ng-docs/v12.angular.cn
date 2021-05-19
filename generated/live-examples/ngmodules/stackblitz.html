@@ -226,8 +226,8 @@ import { UserService } from '../greeting/user.service';
   styleUrls: [ './contact.component.css' ]
 })
 export class ContactComponent implements OnInit {
-  contact: Contact;
-  contacts: Contact[];
+  contact!: Contact;
+  contacts: Contact[] = [];
 
   msg = 'Loading contacts ...';
   userName = '';
@@ -249,7 +249,7 @@ export class ContactComponent implements OnInit {
       this.msg = '';
       this.contacts = contacts;
       this.contact = contacts[0];
-      this.contactForm.get('name').setValue(this.contact.name);
+      this.contactForm.get('name')!.setValue(this.contact.name);
     });
   }
 
@@ -261,14 +261,14 @@ export class ContactComponent implements OnInit {
   }
 
   onSubmit() {
-    const newName = this.contactForm.get('name').value;
+    const newName = this.contactForm.get('name')!.value;
     this.displayMessage('Saved ' + newName);
     this.contact.name = newName;
   }
 
   newContact() {
     this.displayMessage('New contact');
-    this.contactForm.get('name').setValue('');
+    this.contactForm.get('name')!.setValue('');
     this.contact = {id: 42, name: ''};
     this.contacts.push(this.contact);
   }
@@ -338,7 +338,7 @@ export class ContactService implements OnDestroy {
   }
 
   getContact(id: number | string): Observable<Contact> {
-    const contact$ = of(CONTACTS.find(contact => contact.id === +id));
+    const contact$ = of(CONTACTS.find(contact => contact.id === +id)!);
     return contact$.pipe(delay(FETCH_LATENCY));
   }
 }
@@ -370,14 +370,14 @@ import { Customer,
   `
 })
 export class CustomersDetailComponent implements OnInit {
-  customer: Customer;
+  customer!: Customer;
 
   constructor(
     private route: ActivatedRoute,
     private customersService: CustomersService) { }
 
   ngOnInit() {
-    const id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
+    const id = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
     this.customersService.getCustomer(id).subscribe(customer => this.customer = customer);
   }
 }
@@ -526,7 +526,7 @@ export class CustomersService implements OnDestroy {
   }
 
   getCustomer(id: number | string): Observable<Customer> {
-    const customer$ = of(CUSTOMERS.find(customer => customer.id === +id));
+    const customer$ = of(CUSTOMERS.find(customer => customer.id === +id)!);
     return customer$.pipe(delay(FETCH_LATENCY));
   }
 }
@@ -536,7 +536,7 @@ export class CustomersService implements OnDestroy {
 Copyright Google LLC. All Rights Reserved.
 Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
-*/"><input type="hidden" name="files[src/app/greeting/greeting.component.ts]" value="import { Component, Input } from '@angular/core';
+*/"><input type="hidden" name="files[src/app/greeting/greeting.component.ts]" value="import { Component } from '@angular/core';
 import { UserService } from '../greeting/user.service';
 
 @Component({
@@ -628,9 +628,6 @@ can be found in the LICENSE file at https://angular.io/license
 */"><input type="hidden" name="files[src/app/items/items-detail.component.ts]" value="import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Item,
-  ItemService } from './items.service';
-
 @Component({
   template: `
     <h3 highlight>Item Detail</h3>
@@ -640,11 +637,11 @@ import { Item,
   `
 })
 export class ItemsDetailComponent implements OnInit {
-  id: number;
+  id = 0;
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
+    this.id = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
   }
 }
 
@@ -779,7 +776,7 @@ export class ItemService implements OnDestroy {
   }
 
   getItem(id: number | string): Observable<Item> {
-    const item$ = of(ITEMS.find(item => item.id === +id));
+    const item$ = of(ITEMS.find(item => item.id === +id)!);
     return item$.pipe(delay(FETCH_LATENCY));
   }
 }
@@ -1190,6 +1187,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,
@@ -1212,7 +1210,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;strictTemplates&quot;: true,
     &quot;enableIvy&quot;: true
   }
-}"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="NgModules"><input type="hidden" name="description" value="Angular Example - NgModules"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;}"></form>
+}"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="NgModules"><input type="hidden" name="description" value="Angular Example - NgModules"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;,&quot;jasmine-core&quot;:&quot;~3.7.0&quot;}"></form>
         <script>
           var embedded = 'ctl=1';
           var isEmbedded = window.location.search.indexOf(embedded) > -1;

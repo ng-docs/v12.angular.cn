@@ -97,7 +97,7 @@ import { Hero, HEROES } from './hero';
 export class AppComponent {
   title = 'Authors Style Guide Sample';
   heroes = HEROES;
-  selectedHero: Hero;
+  selectedHero!: Hero;
 
   onSelect(hero: Hero): void {
     this.selectedHero = hero;
@@ -517,6 +517,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

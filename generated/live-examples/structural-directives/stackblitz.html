@@ -97,7 +97,7 @@ import { Hero, heroes } from './hero';
 })
 export class AppComponent {
   heroes = heroes;
-  hero = this.heroes[0];
+  hero: Hero | null = this.heroes[0];
   condition = false;
   logs: string[] = [];
   showSad = true;
@@ -143,7 +143,7 @@ import { Hero } from './hero';
   template: `Wow. You like {{hero.name}}. What a happy hero ... just like you.`
 })
 export class HappyHeroComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 }
 
 @Component({
@@ -151,7 +151,7 @@ export class HappyHeroComponent {
   template: `You like {{hero.name}}? Such a sad hero. Are you sad too?`
 })
 export class SadHeroComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 }
 
 @Component({
@@ -159,7 +159,7 @@ export class SadHeroComponent {
   template: `Are you as confused as {{hero.name}}?`
 })
 export class ConfusedHeroComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 }
 
 @Component({
@@ -167,7 +167,7 @@ export class ConfusedHeroComponent {
   template: `{{message}}`
 })
 export class UnknownHeroComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
   get message() {
     return this.hero &amp;&amp; this.hero.name ?
       `${this.hero.name} is strange and mysterious.` :
@@ -586,25 +586,25 @@ can be found in the LICENSE file at https://angular.io/license
 <h4>NgSwitch</h4>
 
 <div [ngSwitch]=&quot;hero?.emotion&quot;>
-  <app-happy-hero    *ngSwitchCase=&quot;'happy'&quot;    [hero]=&quot;hero&quot;></app-happy-hero>
-  <app-sad-hero      *ngSwitchCase=&quot;'sad'&quot;      [hero]=&quot;hero&quot;></app-sad-hero>
-  <app-confused-hero *ngSwitchCase=&quot;'confused'&quot; [hero]=&quot;hero&quot;></app-confused-hero>
-  <app-unknown-hero  *ngSwitchDefault           [hero]=&quot;hero&quot;></app-unknown-hero>
+  <app-happy-hero    *ngSwitchCase=&quot;'happy'&quot;    [hero]=&quot;hero!&quot;></app-happy-hero>
+  <app-sad-hero      *ngSwitchCase=&quot;'sad'&quot;      [hero]=&quot;hero!&quot;></app-sad-hero>
+  <app-confused-hero *ngSwitchCase=&quot;'confused'&quot; [hero]=&quot;hero!&quot;></app-confused-hero>
+  <app-unknown-hero  *ngSwitchDefault           [hero]=&quot;hero!&quot;></app-unknown-hero>
 </div>
 
 <h4>NgSwitch with &amp;lt;ng-template&amp;gt;</h4>
 <div [ngSwitch]=&quot;hero?.emotion&quot;>
   <ng-template [ngSwitchCase]=&quot;'happy'&quot;>
-    <app-happy-hero [hero]=&quot;hero&quot;></app-happy-hero>
+    <app-happy-hero [hero]=&quot;hero!&quot;></app-happy-hero>
   </ng-template>
   <ng-template [ngSwitchCase]=&quot;'sad'&quot;>
-    <app-sad-hero [hero]=&quot;hero&quot;></app-sad-hero>
+    <app-sad-hero [hero]=&quot;hero!&quot;></app-sad-hero>
   </ng-template>
   <ng-template [ngSwitchCase]=&quot;'confused'&quot;>
-    <app-confused-hero [hero]=&quot;hero&quot;></app-confused-hero>
+    <app-confused-hero [hero]=&quot;hero!&quot;></app-confused-hero>
   </ng-template >
   <ng-template ngSwitchDefault>
-    <app-unknown-hero [hero]=&quot;hero&quot;></app-unknown-hero>
+    <app-unknown-hero [hero]=&quot;hero!&quot;></app-unknown-hero>
   </ng-template>
 </div>
 
@@ -799,6 +799,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,
@@ -821,7 +822,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;strictTemplates&quot;: true,
     &quot;enableIvy&quot;: true
   }
-}"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="structural"><input type="hidden" name="tags[3]" value="directives"><input type="hidden" name="tags[4]" value="template"><input type="hidden" name="tags[5]" value="ngIf"><input type="hidden" name="tags[6]" value="ngSwitch"><input type="hidden" name="tags[7]" value="ngFor"><input type="hidden" name="description" value="Angular Example - Structural directives"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;}"></form>
+}"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="structural"><input type="hidden" name="tags[3]" value="directives"><input type="hidden" name="tags[4]" value="template"><input type="hidden" name="tags[5]" value="ngIf"><input type="hidden" name="tags[6]" value="ngSwitch"><input type="hidden" name="tags[7]" value="ngFor"><input type="hidden" name="description" value="Angular Example - Structural directives"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;,&quot;jasmine-core&quot;:&quot;~3.7.0&quot;}"></form>
         <script>
           var embedded = 'ctl=1';
           var isEmbedded = window.location.search.indexOf(embedded) > -1;

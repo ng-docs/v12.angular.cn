@@ -148,8 +148,8 @@ import { QuestionBase } from './question-base';
   templateUrl: './dynamic-form-question.component.html'
 })
 export class DynamicFormQuestionComponent {
-  @Input() question: QuestionBase<string>;
-  @Input() form: FormGroup;
+  @Input() question!: QuestionBase<string>;
+  @Input() form!: FormGroup;
   get isValid() { return this.form.controls[this.question.key].valid; }
 }
 
@@ -171,14 +171,14 @@ import { QuestionControlService } from './question-control.service';
 })
 export class DynamicFormComponent implements OnInit {
 
-  @Input() questions: QuestionBase<string>[] = [];
-  form: FormGroup;
+  @Input() questions: QuestionBase<string>[] | null = [];
+  form!: FormGroup;
   payLoad = '';
 
-  constructor(private qcs: QuestionControlService) {  }
+  constructor(private qcs: QuestionControlService) {}
 
   ngOnInit() {
-    this.form = this.qcs.toFormGroup(this.questions);
+    this.form = this.qcs.toFormGroup(this.questions as QuestionBase<string>[]);
   }
 
   onSubmit() {
@@ -192,7 +192,7 @@ Copyright Google LLC. All Rights Reserved.
 Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
 */"><input type="hidden" name="files[src/app/question-base.ts]" value="export class QuestionBase<T> {
-  value: T;
+  value: T|undefined;
   key: string;
   label: string;
   required: boolean;
@@ -660,6 +660,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

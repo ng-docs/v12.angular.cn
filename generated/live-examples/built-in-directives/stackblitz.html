@@ -102,15 +102,15 @@ export class AppComponent implements OnInit {
   isUnchanged = true;
 
   isActive = true;
-  nullCustomer = null;
+  nullCustomer: string | null = null;
   currentCustomer = {
     name: 'Laura'
   };
 
-  item: Item; // defined to demonstrate template context precedence
-  items: Item[];
+  item!: Item; // defined to demonstrate template context precedence
+  items: Item[] = [];
 
-  currentItem: Item;
+  currentItem!: Item;
 
 
 
@@ -120,9 +120,9 @@ export class AppComponent implements OnInit {
   itemsWithTrackByCountReset = 0;
   itemIdIncrement = 1;
 
-  currentClasses: {};
+  currentClasses: Record<string, boolean> = {};
 
-  currentStyles: {};
+  currentStyles: Record<string, string> = {};
 
   ngOnInit() {
     this.resetItems();
@@ -191,8 +191,8 @@ export class AppComponent implements OnInit {
 
   trackById(index: number, item: any): number { return item.id; }
 
-  getValue(target: EventTarget): string {
-    return (target as HTMLInputElement).value;
+  getValue(event: Event): string {
+    return (event.target as HTMLInputElement).value;
   }
 }
 
@@ -245,7 +245,7 @@ import { Item } from './item';
 })
 
 export class StoutItemComponent {
-  @Input() item: Item;
+  @Input() item!: Item;
 }
 
 
@@ -254,7 +254,7 @@ export class StoutItemComponent {
   template: `This is the brightest {{item.name}} in town.`
 })
 export class BestItemComponent {
-  @Input() item: Item;
+  @Input() item!: Item;
 }
 
 @Component({
@@ -262,7 +262,7 @@ export class BestItemComponent {
   template: `Which is the slimmest {{item.name}}?`
 })
 export class DeviceItemComponent {
-  @Input() item: Item;
+  @Input() item!: Item;
 }
 
 @Component({
@@ -270,7 +270,7 @@ export class DeviceItemComponent {
   template: `Has anyone seen my {{item.name}}?`
 })
 export class LostItemComponent {
-  @Input() item: Item;
+  @Input() item!: Item;
 }
 
 @Component({
@@ -278,7 +278,7 @@ export class LostItemComponent {
   template: `{{message}}`
 })
 export class UnknownItemComponent {
-  @Input() item: Item;
+  @Input() item!: Item;
   get message() {
     return this.item &amp;&amp; this.item.name ?
       `${this.item.name} is strange and mysterious.` :
@@ -299,7 +299,7 @@ can be found in the LICENSE file at https://angular.io/license
 
   static items: Item[] = [
     new Item(
-      null,
+      0,
       'Teapot',
       'stout'
     ),
@@ -311,7 +311,7 @@ can be found in the LICENSE file at https://angular.io/license
 
 
   constructor(
-    public id?: number,
+    public id: number,
     public name?: string,
     public feature?: string,
     public url?: string,
@@ -321,7 +321,7 @@ can be found in the LICENSE file at https://angular.io/license
   }
 
   clone(): Item {
-    return Object.assign(new Item(), this);
+    return Object.assign(new Item(this.id), this);
   }
 }
 
@@ -373,7 +373,7 @@ import { Item } from '../item';
 export class ItemDetailComponent {
 
 
-  @Input() item: Item;
+  @Input() item!: Item;
 
   constructor() { }
 
@@ -588,7 +588,7 @@ can be found in the LICENSE file at https://angular.io/license
   <p>Current item name: {{currentItem.name}}</p>
   <p>
     <label for=&quot;without&quot;>without NgModel:</label>
-    <input [value]=&quot;currentItem.name&quot; (input)=&quot;currentItem.name=getValue($event.target)&quot; id=&quot;without&quot;>
+    <input [value]=&quot;currentItem.name&quot; (input)=&quot;currentItem.name=getValue($event)&quot; id=&quot;without&quot;>
   </p>
 
   <p>
@@ -945,6 +945,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

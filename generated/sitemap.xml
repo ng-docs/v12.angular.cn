@@ -109,6 +109,9 @@
     <loc>https://angular.cn/guide/deprecations</loc>
   </url>
   <url>
+    <loc>https://angular.cn/guide/devtools</loc>
+  </url>
+  <url>
     <loc>https://angular.cn/guide/docs-style-guide</loc>
   </url>
   <url>
@@ -277,6 +280,9 @@
     <loc>https://angular.cn/guide/route-animations</loc>
   </url>
   <url>
+    <loc>https://angular.cn/guide/router-reference</loc>
+  </url>
+  <url>
     <loc>https://angular.cn/guide/router-tutorial-toh</loc>
   </url>
   <url>
@@ -284,6 +290,9 @@
   </url>
   <url>
     <loc>https://angular.cn/guide/router</loc>
+  </url>
+  <url>
+    <loc>https://angular.cn/guide/routing-overview</loc>
   </url>
   <url>
     <loc>https://angular.cn/guide/rx-library</loc>

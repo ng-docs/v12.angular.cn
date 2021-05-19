@@ -114,11 +114,11 @@ export class AppComponent {
     console.warn(`Parent says: crossing off ${item}.`);
   }
 
-  buyClearanceItem(item) {
+  buyClearanceItem(item: string) {
     console.warn(`Parent says: buying ${item}.`);
   }
 
-  saveForLater(item) {
+  saveForLater(item: string) {
     console.warn(`Parent says: saving ${item} for later.`);
   }
 
@@ -215,10 +215,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class AliasingComponent {
 
-  input1: string;
+  input1 = '';
   outputEvent1: EventEmitter<string> = new EventEmitter<string>();
 
-  @Input('wishListItem') input2: string; //  @Input(alias)
+  @Input('wishListItem') input2 = ''; //  @Input(alias)
   @Output('wishEvent') outputEvent2 = new EventEmitter<string>(); //  @Output(alias) propertyName = ...
 
 
@@ -262,7 +262,7 @@ export class InTheMetadataComponent  {
 
 
   buyEvent = new EventEmitter<string>();
-  clearanceItem: string;
+  clearanceItem = '';
 
   buyIt() {
     console.warn('Child says: emiting buyEvent with', this.clearanceItem);
@@ -287,7 +287,7 @@ can be found in the LICENSE file at https://angular.io/license
   styleUrls: ['./input-output.component.css']
 })
 export class InputOutputComponent {
-  @Input() item: string;
+  @Input() item = '';
   @Output() deleteRequest = new EventEmitter<string>();
 
   lineThrough = '';
@@ -313,7 +313,7 @@ can be found in the LICENSE file at https://angular.io/license
 })
 
 export class ItemDetailComponent {
-  @Input() item: string; // decorate the property with @Input()
+  @Input() item = ''; // decorate the property with @Input()
 }
 
 
@@ -723,6 +723,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,
@@ -745,7 +746,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;strictTemplates&quot;: true,
     &quot;enableIvy&quot;: true
   }
-}"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="Inputs and Outputs"><input type="hidden" name="description" value="Angular Example - Inputs and Outputs"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;}"></form>
+}"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="Inputs and Outputs"><input type="hidden" name="description" value="Angular Example - Inputs and Outputs"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;,&quot;jasmine-core&quot;:&quot;~3.7.0&quot;}"></form>
         <script>
           var embedded = 'ctl=1';
           var isEmbedded = window.location.search.indexOf(embedded) > -1;

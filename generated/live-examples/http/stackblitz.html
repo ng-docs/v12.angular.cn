@@ -396,15 +396,15 @@ import { Config, ConfigService } from './config.service';
 })
 export class ConfigComponent {
   error: any;
-  headers: string[];
-  config: Config;
+  headers: string[] = [];
+  config: Config | undefined;
 
   constructor(private configService: ConfigService) {}
 
   clear() {
     this.config = undefined;
     this.error = undefined;
-    this.headers = undefined;
+    this.headers = [];
   }
 
   showConfig() {
@@ -440,7 +440,7 @@ export class ConfigComponent {
           `${key}: ${resp.headers.get(key)}`);
 
         // access the body directly, which is typed as `Config`.
-        this.config = { ... resp.body };
+        this.config = { ...resp.body! };
       });
   }
   makeError() {
@@ -485,7 +485,7 @@ export class ConfigService {
   }
 
   getConfig_1() {
-    return this.http.get(this.configUrl);
+    return this.http.get<Config>(this.configUrl);
   }
 
   getConfig_2() {
@@ -544,7 +544,7 @@ import { DownloaderService } from './downloader.service';
   providers: [ DownloaderService ]
 })
 export class DownloaderComponent {
-  contents: string;
+  contents: string | undefined;
   constructor(private downloaderService: DownloaderService) {}
 
   clear() {
@@ -627,8 +627,8 @@ import { HeroesService } from './heroes.service';
   styleUrls: ['./heroes.component.css']
 })
 export class HeroesComponent implements OnInit {
-  heroes: Hero[];
-  editHero: Hero; // the hero currently being edited
+  heroes: Hero[] = [];
+  editHero: Hero | undefined; // the hero currently being edited
 
   constructor(private heroesService: HeroesService) {}
 
@@ -762,7 +762,7 @@ export class HeroesService {
   }
 
   /** DELETE: delete the hero from the server */
-  deleteHero(id: number): Observable<{}> {
+  deleteHero(id: number): Observable<unknown> {
     const url = `${this.heroesUrl}/${id}`; // DELETE api/heroes/42
     return this.http.delete(url, httpOptions)
       .pipe(
@@ -1257,7 +1257,7 @@ import { NpmPackageInfo, PackageSearchService } from './package-search.service';
 })
 export class PackageSearchComponent implements OnInit {
   withRefresh = false;
-  packages$: Observable<NpmPackageInfo[]>;
+  packages$!: Observable<NpmPackageInfo[]>;
   private searchText$ = new Subject<string>();
 
   search(packageName: string) {
@@ -1278,8 +1278,8 @@ export class PackageSearchComponent implements OnInit {
 
   toggleRefresh() { this.withRefresh = ! this.withRefresh; }
 
-  getValue(target: EventTarget): string {
-    return (target as HTMLInputElement).value;
+  getValue(event: Event): string {
+    return (event.target as HTMLInputElement).value;
   }
 }
 
@@ -1304,17 +1304,11 @@ export interface NpmPackageInfo {
 
 export const searchUrl = 'https://npmsearch.com/query';
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'x-refresh':  'true'
-  })
-};
-
 function createHttpOptions(packageName: string, refresh = false) {
     // npm package name search api
     // e.g., http://npmsearch.com/query?q=dom'
     const params = new HttpParams({ fromObject: { q: packageName } });
-    const headerMap = refresh ? {'x-refresh': 'true'} : {};
+    const headerMap: Record<string, string> = refresh ? {'x-refresh': 'true'} : {};
     const headers = new HttpHeaders(headerMap) ;
     return { headers, params };
 }
@@ -1365,16 +1359,16 @@ import { UploaderService } from './uploader.service';
   providers: [ UploaderService ]
 })
 export class UploaderComponent {
-  message: string;
+  message = '';
 
   constructor(private uploaderService: UploaderService) {}
 
   onPicked(input: HTMLInputElement) {
-    const file = input.files[0];
+    const file = input.files?.[0];
     if (file) {
       this.uploaderService.upload(file).subscribe(
         msg => {
-          input.value = null;
+          input.value = '';
           this.message = msg;
         }
       );
@@ -1446,7 +1440,7 @@ export class UploaderService {
 
       case HttpEventType.UploadProgress:
         // Compute and show the % done:
-        const percentDone = Math.round(100 * event.loaded / event.total);
+        const percentDone = Math.round(100 * event.loaded / (event.total ?? 0));
         return `File &quot;${file.name}&quot; is ${percentDone}% uploaded.`;
 
       case HttpEventType.Response:
@@ -1791,7 +1785,7 @@ Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
 -->"><input type="hidden" name="files[src/app/package-search/package-search.component.html]" value="<h2>Search Npm Packages</h2>
 <p><i>Searches when typing stops. Caches for 30 seconds.</i></p>
-<input type=&quot;text&quot; (keyup)=&quot;search(getValue($event.target))&quot; id=&quot;name&quot; placeholder=&quot;Search&quot;/>
+<input type=&quot;text&quot; (keyup)=&quot;search(getValue($event))&quot; id=&quot;name&quot; placeholder=&quot;Search&quot;/>
 <input type=&quot;checkbox&quot; id=&quot;refresh&quot; [checked]=&quot;withRefresh&quot; (click)=&quot;toggleRefresh()&quot;>
 <label for=&quot;refresh&quot;>with refresh</label>
 
@@ -1961,6 +1955,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,
@@ -1988,7 +1983,7 @@ can be found in the LICENSE file at https://angular.io/license
   &quot;textfile&quot;: &quot;assets/textfile.txt&quot;,
   &quot;date&quot;: &quot;2020-01-29&quot;
 }
-"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="http"><input type="hidden" name="description" value="Angular Example - Http"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;}"></form>
+"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="http"><input type="hidden" name="description" value="Angular Example - Http"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;,&quot;jasmine-core&quot;:&quot;~3.7.0&quot;}"></form>
         <script>
           var embedded = 'ctl=1';
           var isEmbedded = window.location.search.indexOf(embedded) > -1;

@@ -233,7 +233,7 @@ export class HeroFormReactiveComponent implements OnInit {
 
   hero = { name: 'Dr.', alterEgo: 'Dr. What', power: this.powers[0] };
 
-  heroForm: FormGroup;
+  heroForm!: FormGroup;
 
   ngOnInit(): void {
     this.heroForm = new FormGroup({
@@ -250,11 +250,11 @@ export class HeroFormReactiveComponent implements OnInit {
     },  { validators: identityRevealedValidator }); // <-- add custom validator at the FormGroup level
   }
 
-  get name() { return this.heroForm.get('name'); }
+  get name() { return this.heroForm.get('name')!; }
 
-  get power() { return this.heroForm.get('power'); }
+  get power() { return this.heroForm.get('power')!; }
 
-  get alterEgo() { return this.heroForm.get('alterEgo'); }
+  get alterEgo() { return this.heroForm.get('alterEgo')!; }
 
   constructor(private alterEgoValidator: UniqueAlterEgoValidator) { }
 }
@@ -317,7 +317,7 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorF
 
 /** A hero's name can't match the given regular expression */
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
-  return (control: AbstractControl): {[key: string]: any} | null => {
+  return (control: AbstractControl): ValidationErrors | null => {
     const forbidden = nameRe.test(control.value);
     return forbidden ? {forbiddenName: {value: control.value}} : null;
   };
@@ -328,7 +328,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
   providers: [{provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true}]
 })
 export class ForbiddenValidatorDirective implements Validator {
-  @Input('appForbiddenName') forbiddenName: string;
+  @Input('appForbiddenName') forbiddenName = '';
 
   validate(control: AbstractControl): ValidationErrors | null {
     return this.forbiddenName ? forbiddenNameValidator(new RegExp(this.forbiddenName, 'i'))(control)
@@ -378,7 +378,7 @@ export const identityRevealedValidator: ValidatorFn = (control: AbstractControl)
   providers: [{ provide: NG_VALIDATORS, useExisting: IdentityRevealedValidatorDirective, multi: true }]
 })
 export class IdentityRevealedValidatorDirective implements Validator {
-  validate(control: AbstractControl): ValidationErrors {
+  validate(control: AbstractControl): ValidationErrors | null {
     return identityRevealedValidator(control);
   }
 }
@@ -588,13 +588,13 @@ can be found in the LICENSE file at https://angular.io/license
           <div *ngIf=&quot;name.invalid &amp;&amp; (name.dirty || name.touched)&quot;
               class=&quot;alert alert-danger&quot;>
 
-            <div *ngIf=&quot;name.errors.required&quot;>
+            <div *ngIf=&quot;name.errors?.required&quot;>
               Name is required.
             </div>
-            <div *ngIf=&quot;name.errors.minlength&quot;>
+            <div *ngIf=&quot;name.errors?.minlength&quot;>
               Name must be at least 4 characters long.
             </div>
-            <div *ngIf=&quot;name.errors.forbiddenName&quot;>
+            <div *ngIf=&quot;name.errors?.forbiddenName&quot;>
               Name cannot be Bob.
             </div>
           </div>
@@ -626,7 +626,7 @@ can be found in the LICENSE file at https://angular.io/license
         </select>
 
         <div *ngIf=&quot;power.invalid &amp;&amp; power.touched&quot; class=&quot;alert alert-danger&quot;>
-          <div *ngIf=&quot;power.errors.required&quot;>Power is required.</div>
+          <div *ngIf=&quot;power.errors?.required&quot;>Power is required.</div>
         </div>
       </div>
 
@@ -665,13 +665,13 @@ can be found in the LICENSE file at https://angular.io/license
           <div *ngIf=&quot;name.invalid &amp;&amp; (name.dirty || name.touched)&quot;
               class=&quot;alert&quot;>
 
-            <div *ngIf=&quot;name.errors.required&quot;>
+            <div *ngIf=&quot;name.errors?.required&quot;>
               Name is required.
             </div>
-            <div *ngIf=&quot;name.errors.minlength&quot;>
+            <div *ngIf=&quot;name.errors?.minlength&quot;>
               Name must be at least 4 characters long.
             </div>
-            <div *ngIf=&quot;name.errors.forbiddenName&quot;>
+            <div *ngIf=&quot;name.errors?.forbiddenName&quot;>
               Name cannot be Bob.
             </div>
 
@@ -873,6 +873,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

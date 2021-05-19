@@ -165,7 +165,7 @@ import { Subscription } from 'rxjs';
   `
 })
 export class AstronautComponent implements OnDestroy {
-  @Input() astronaut: string;
+  @Input() astronaut = '';
   mission = '<no mission announced>';
   confirmed = false;
   announced = false;
@@ -230,7 +230,7 @@ export class CountdownLocalVarParentComponent { }
 export class CountdownViewChildParentComponent implements AfterViewInit {
 
   @ViewChild(CountdownTimerComponent)
-  private timerComponent: CountdownTimerComponent;
+  private timerComponent!: CountdownTimerComponent;
 
   seconds() { return 0; }
 
@@ -303,8 +303,8 @@ import { Hero } from './hero';
   `
 })
 export class HeroChildComponent {
-  @Input() hero: Hero;
-  @Input('master') masterName: string; // tslint:disable-line: no-input-rename
+  @Input() hero!: Hero;
+  @Input('master') masterName = ''; // tslint:disable-line: no-input-rename
 }
 
 
@@ -481,8 +481,8 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   `
 })
 export class VersionChildComponent implements OnChanges {
-  @Input() major: number;
-  @Input() minor: number;
+  @Input() major = 0;
+  @Input() minor = 0;
   changeLog: string[] = [];
 
   ngOnChanges(changes: SimpleChanges) {
@@ -547,7 +547,7 @@ can be found in the LICENSE file at https://angular.io/license
   `
 })
 export class VoterComponent {
-  @Input()  name: string;
+  @Input()  name = '';
   @Output() voted = new EventEmitter<boolean>();
   didVote = false;
 
@@ -941,6 +941,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

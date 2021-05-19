@@ -116,8 +116,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     trackChanges(this.heroesWithTrackBy, () => this.heroesWithTrackByCount++);
   }
 
-  @ViewChildren('noTrackBy')   heroesNoTrackBy: QueryList<ElementRef>;
-  @ViewChildren('withTrackBy') heroesWithTrackBy: QueryList<ElementRef>;
+  @ViewChildren('noTrackBy')   heroesNoTrackBy!: QueryList<ElementRef>;
+  @ViewChildren('withTrackBy') heroesWithTrackBy!: QueryList<ElementRef>;
 
   actionName = 'Go for it';
   badCurly = 'bad curly';
@@ -151,7 +151,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   color = Color.Red;
   colorToggle() {this.color = (this.color === Color.Red) ? Color.Blue : Color.Red; }
 
-  currentHero: Hero;
+  currentHero!: Hero;
 
   updateCurrentHeroName(event: Event) {
     this.currentHero.name = (event.target as any).value;
@@ -169,9 +169,9 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   getVal(): number { return 2; }
 
-  name: string = Hero.heroes[0].name;
-  hero: Hero; // defined to demonstrate template context precedence
-  heroes: Hero[];
+  name: string = Hero.heroes[0].name || '';
+  hero!: Hero; // defined to demonstrate template context precedence
+  heroes: Hero[] = [];
 
   // trackBy change counting
   heroesNoTrackByCount   = 0;
@@ -192,7 +192,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   isSpecial = true;
   isUnchanged = true;
 
-  get nullHero(): Hero { return null; }
+  get nullHero(): Hero | null { return null; }
 
   onClickMe(event?: MouseEvent) {
     const evtMsg = event ? ' Event target class is ' + (event.target as HTMLElement).className  : '';
@@ -224,7 +224,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.currentHero.name = name.toUpperCase();
   }
 
-  currentClasses: {};
+  currentClasses: Record<string, boolean> = {};
   setCurrentClasses() {
     // CSS classes: added/removed per current state of component properties
     this.currentClasses =  {
@@ -234,7 +234,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     };
   }
 
-  currentStyles: {};
+  currentStyles: Record<string, string> = {};
   setCurrentStyles() {
     // CSS styles: set per current state of component properties
     this.currentStyles = {
@@ -384,13 +384,13 @@ import { Hero } from './hero';
   <div>
     <img src=&quot;{{heroImageUrl}}&quot;>
     <span [style.text-decoration]=&quot;lineThrough&quot;>
-      {{prefix}} {{hero?.name}}
+      {{prefix}} {{hero.name}}
     </span>
     <button (click)=&quot;delete()&quot;>Delete</button>
   </div>`
 })
 export class HeroDetailComponent {
-  hero: Hero = new Hero(-1, '', 'Zzzzzzzz'); // default sleeping hero
+  hero = new Hero(-1, '', 'Zzzzzzzz'); // default sleeping hero
   // heroImageUrl = 'https://wpclipart.com/cartoon/people/hero/hero_silhoutte_T.png';
   // Public Domain terms of use: https://wpclipart.com/terms.html
   heroImageUrl = 'assets/images/hero.png';
@@ -411,12 +411,12 @@ export class HeroDetailComponent {
   template: `
   <div class=&quot;detail&quot;>
     <img src=&quot;{{heroImageUrl}}&quot;>
-    <div><b>{{hero?.name}}</b></div>
-    <div>Name: {{hero?.name}}</div>
-    <div>Emotion: {{hero?.emotion}}</div>
-    <div>Birthdate: {{hero?.birthdate | date:'longDate'}}</div>
-    <div>Web: <a href=&quot;{{hero?.url}}&quot; target=&quot;_blank&quot;>{{hero?.url}}</a></div>
-    <div>Rate/hr: {{hero?.rate | currency:'EUR'}}</div>
+    <div><b>{{hero.name}}</b></div>
+    <div>Name: {{hero.name}}</div>
+    <div>Emotion: {{hero.emotion}}</div>
+    <div>Birthdate: {{hero.birthdate | date:'longDate'}}</div>
+    <div>Web: <a href=&quot;{{hero.url}}&quot; target=&quot;_blank&quot;>{{hero.url}}</a></div>
+    <div>Rate/hr: {{hero.rate | currency:'EUR'}}</div>
     <br clear=&quot;all&quot;>
     <button (click)=&quot;delete()&quot;>Delete</button>
   </div>
@@ -428,7 +428,7 @@ export class HeroDetailComponent {
 })
 export class BigHeroDetailComponent extends HeroDetailComponent {
 
-  @Input()  hero: Hero;
+  @Input() hero!: Hero;
   @Output() deleteRequest = new EventEmitter<Hero>();
 
   delete() {
@@ -455,8 +455,8 @@ import { Hero } from './hero';
   `]
 })
 export class HeroFormComponent {
-  @Input() hero: Hero;
-  @ViewChild('heroForm') form: NgForm;
+  @Input() hero!: Hero;
+  @ViewChild('heroForm') form!: NgForm;
 
   // tslint:disable-next-line:variable-name
   private _submitMessage = '';
@@ -486,7 +486,7 @@ import { Hero } from './hero';
   template: `Wow. You like {{hero.name}}. What a happy hero ... just like you.`
 })
 export class HappyHeroComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 }
 
 @Component({
@@ -494,7 +494,7 @@ export class HappyHeroComponent {
   template: `You like {{hero.name}}? Such a sad hero. Are you sad too?`
 })
 export class SadHeroComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 }
 
 @Component({
@@ -502,7 +502,7 @@ export class SadHeroComponent {
   template: `Are you as confused as {{hero.name}}?`
 })
 export class ConfusedHeroComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 }
 
 @Component({
@@ -510,7 +510,7 @@ export class ConfusedHeroComponent {
   template: `{{message}}`
 })
 export class UnknownHeroComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
   get message() {
     return this.hero &amp;&amp; this.hero.name ?
       `${this.hero.name} is strange and mysterious.` :
@@ -531,7 +531,7 @@ can be found in the LICENSE file at https://angular.io/license
 
   static heroes: Hero[] = [
     new Hero(
-      null,
+      0,
       'Hercules',
       'happy',
       new Date(1970, 1, 25),
@@ -546,15 +546,13 @@ can be found in the LICENSE file at https://angular.io/license
 
 
   constructor(
-    public id?: number,
+    public id = Hero.nextId++,
     public name?: string,
     public emotion?: string,
     public birthdate?: Date,
     public url?: string,
     public rate = 100,
-    ) {
-    this.id = id ? id : Hero.nextId++;
-  }
+    ) {}
 
   clone(): Hero {
     return Object.assign(new Hero(), this);
@@ -578,7 +576,7 @@ can be found in the LICENSE file at https://angular.io/license
   </div>`
 })
 export class SizerComponent {
-  @Input()  size: number | string;
+  @Input()  size!: number | string;
   @Output() sizeChange = new EventEmitter<number>();
 
   dec() { this.resize(-1); }
@@ -1645,6 +1643,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,
@@ -1673,7 +1672,7 @@ can be found in the LICENSE file at https://angular.io/license
     <text x=&quot;120&quot; y=&quot;50&quot;>click the rectangle to change the fill color</text>
   </g>
 </svg>
-"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="template"><input type="hidden" name="description" value="Angular Example - Template Syntax Collection"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;}"></form>
+"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="template"><input type="hidden" name="description" value="Angular Example - Template Syntax Collection"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;,&quot;jasmine-core&quot;:&quot;~3.7.0&quot;}"></form>
         <script>
           var embedded = 'ctl=1';
           var isEmbedded = window.location.search.indexOf(embedded) > -1;

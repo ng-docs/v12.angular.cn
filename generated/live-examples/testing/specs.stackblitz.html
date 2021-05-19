@@ -20,7 +20,7 @@ can be found in the LICENSE file at https://angular.io/license
 import 'jasmine-core/lib/jasmine-core/jasmine-html.js';
 import 'jasmine-core/lib/jasmine-core/boot.js';
 
-declare var jasmine;
+declare var jasmine: any;
 
 import './polyfills';
 
@@ -46,7 +46,7 @@ function bootstrap() {
     location.reload();
     return;
   } else {
-    window.onload(undefined);
+    window.onload?.({} as Event);
     (window as any).jasmineRef = jasmine.getEnv();
   }
 
@@ -713,7 +713,6 @@ class Page {
 
   // for debugging
   comp: AppComponent;
-  location: SpyLocation;
   router: Router;
   fixture: ComponentFixture<AppComponent>;
 
@@ -1188,7 +1187,7 @@ describe('BannerComponent (with beforeEach)', () => {
 
   it('should have <p> with &quot;banner works!&quot;', () => {
     const bannerElement: HTMLElement = fixture.nativeElement;
-    const p = bannerElement.querySelector('p');
+    const p = bannerElement.querySelector('p')!;
     expect(p.textContent).toEqual('banner works!');
   });
 
@@ -1196,7 +1195,7 @@ describe('BannerComponent (with beforeEach)', () => {
   it('should find the <p> with fixture.debugElement.nativeElement)', () => {
     const bannerDe: DebugElement = fixture.debugElement;
     const bannerEl: HTMLElement = bannerDe.nativeElement;
-    const p = bannerEl.querySelector('p');
+    const p = bannerEl.querySelector('p')!;
     expect(p.textContent).toEqual('banner works!');
   });
 
@@ -1396,7 +1395,7 @@ describe('DashboardHeroComponent when tested directly', () => {
   });
 
   it('should raise selected event when clicked (triggerEventHandler)', () => {
-    let selectedHero: Hero;
+    let selectedHero: Hero | undefined;
     comp.selected.subscribe((hero: Hero) => selectedHero = hero);
 
     heroDe.triggerEventHandler('click', null);
@@ -1404,7 +1403,7 @@ describe('DashboardHeroComponent when tested directly', () => {
   });
 
   it('should raise selected event when clicked (element.click)', () => {
-    let selectedHero: Hero;
+    let selectedHero: Hero | undefined;
     comp.selected.subscribe((hero: Hero) => selectedHero = hero);
 
     heroEl.click();
@@ -1412,7 +1411,7 @@ describe('DashboardHeroComponent when tested directly', () => {
   });
 
   it('should raise selected event when clicked (click helper)', () => {
-    let selectedHero: Hero;
+    let selectedHero: Hero | undefined;
     comp.selected.subscribe((hero: Hero) => selectedHero = hero);
 
     click(heroDe);  // click helper with DebugElement
@@ -1466,7 +1465,7 @@ import { Component } from '@angular/core';
 })
 class TestHostComponent {
   hero: Hero = {id: 42, name: 'Test Name'};
-  selectedHero: Hero;
+  selectedHero: Hero | undefined;
   onSelected(hero: Hero) {
     this.selectedHero = hero;
   }
@@ -1490,7 +1489,7 @@ import { Hero } from '../model/hero';
   styleUrls: [ './dashboard-hero.component.css' ]
 })
 export class DashboardHeroComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
   @Output() selected = new EventEmitter<Hero>();
   click() { this.selected.emit(this.hero); }
 }
@@ -1896,11 +1895,11 @@ describe('Angular async helper', () => {
     it('should get Date diff correctly in fakeAsync with rxjs scheduler', fakeAsync(() => {
          // need to add `import 'zone.js/plugins/zone-patch-rxjs-fake-async'
          // to patch rxjs scheduler
-         let result = null;
+         let result = '';
          of('hello').pipe(delay(1000)).subscribe(v => {
            result = v;
          });
-         expect(result).toBeNull();
+         expect(result).toBe('');
          tick(1000);
          expect(result).toBe('hello');
 
@@ -2170,7 +2169,7 @@ describe('demo (with TestBed):', () => {
     });
 
     it('can inject a default value when service is not provided', () => {
-      service = TestBed.inject(NotProvided, null); // service is null
+      expect(TestBed.inject(NotProvided, null)).toBeNull();
     });
 
     it('test should wait for ValueService.getPromiseValue', waitForAsync(() => {
@@ -2569,7 +2568,7 @@ describe('demo (with TestBed):', () => {
         })
         .createComponent(TestComponent);
 
-      let testBedProvider: ValueService;
+      let testBedProvider!: ValueService;
       let tcProvider: ValueService;
       let tpcProvider: FakeValueService;
 
@@ -2871,8 +2870,8 @@ export class ReversePipe implements PipeTransform {
  `
 })
 export class BankAccountComponent {
-  @Input() bank: string;
-  @Input('account') id: string;
+  @Input() bank = '';
+  @Input('account') id = '';
 
   // Removed on 12/02/2016 when ceased public discussion of the `Renderer`. Revive in future?
   // constructor(private renderer: Renderer, private el: ElementRef ) {
@@ -2925,7 +2924,7 @@ export class Child1Component {
   template: '<div>Child-2({{text}})</div>'
 })
 export class Child2Component {
-  @Input() text: string;
+  @Input() text = '';
 }
 
 @Component({
@@ -2933,7 +2932,7 @@ export class Child2Component {
   template: '<div>Child-3({{text}})</div>'
 })
 export class Child3Component {
-  @Input() text: string;
+  @Input() text = '';
 }
 
 @Component({
@@ -2994,7 +2993,7 @@ export class ParentComponent { }
   template: `<div class=&quot;hero&quot; (click)=&quot;click()&quot;>Original {{hero.name}}</div>`
 })
 export class IoComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
   @Output() selected = new EventEmitter<Hero>();
   click() { this.selected.emit(this.hero); }
 }
@@ -3013,7 +3012,7 @@ export class IoComponent {
 })
 export class IoParentComponent {
   heroes: Hero[] = [ {name: 'Bob'}, {name: 'Carol'}, {name: 'Ted'}, {name: 'Alice'} ];
-  selectedHero: Hero;
+  selectedHero!: Hero;
   onSelect(hero: Hero) { this.selectedHero = hero; }
 }
 
@@ -3049,7 +3048,7 @@ export class TestViewProvidersComponent {
   templateUrl: './demo-external-template.html'
 })
 export class ExternalTemplateComponent implements OnInit {
-  serviceValue: string;
+  serviceValue = '';
 
   constructor(@Optional() private service?: ValueService) {  }
 
@@ -3689,14 +3688,14 @@ export class HeroDetailComponent implements OnInit {
     private router: Router) {
   }
 
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 
   ngOnInit(): void {
     // get hero when `id` param changes
     this.route.paramMap.subscribe(pmap => this.getHero(pmap.get('id')));
   }
 
-  private getHero(id: string): void {
+  private getHero(id: string | null): void {
     // when no id or id===0, create new blank hero
     if (!id) {
       this.hero = { id: 0, name: '' } as Hero;
@@ -3741,7 +3740,7 @@ export class HeroDetailService {
   constructor(private heroService: HeroService) {  }
 
   // Returns a clone which caller may modify safely
-  getHero(id: number | string): Observable<Hero> {
+  getHero(id: number | string): Observable<Hero | null> {
     if (typeof id === 'string') {
       id = parseInt(id, 10);
     }
@@ -3913,7 +3912,7 @@ class Page {
 Copyright Google LLC. All Rights Reserved.
 Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
-*/"><input type="hidden" name="files[src/app/hero/hero-list.component.ts]" value="import { Component, OnInit } from '@angular/core';
+*/"><input type="hidden" name="files[src/app/hero/hero-list.component.ts]" value="import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -3926,15 +3925,13 @@ import { HeroService } from '../model/hero.service';
   templateUrl: './hero-list.component.html',
   styleUrls: [ './hero-list.component.css' ]
 })
-export class HeroListComponent implements OnInit {
+export class HeroListComponent {
   heroes: Observable<Hero[]>;
-  selectedHero: Hero;
+  selectedHero!: Hero;
 
   constructor(
     private router: Router,
-    private heroService: HeroService) { }
-
-  ngOnInit() {
+    private heroService: HeroService) {
     this.heroes = this.heroService.getHeroes();
   }
 
@@ -4388,18 +4385,18 @@ import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 })
 export class CanvasComponent implements AfterViewInit {
   blobSize = 0;
-  @ViewChild('sampleCanvas') sampleCanvas: ElementRef;
+  @ViewChild('sampleCanvas') sampleCanvas!: ElementRef;
 
   ngAfterViewInit() {
     const canvas: HTMLCanvasElement = this.sampleCanvas.nativeElement;
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
 
     context.clearRect(0, 0, 200, 200);
     context.fillStyle = '#FF1122';
     context.fillRect(0, 0, 200, 200);
 
     canvas.toBlob(blob => {
-      this.blobSize = blob.size;
+      this.blobSize = blob?.size ?? 0;
     });
   }
 }
@@ -4529,7 +4526,7 @@ export class HighlightDirective implements OnChanges {
 
   defaultColor =  'rgb(211, 211, 211)'; // lightgray
 
-  @Input('highlight') bgColor: string;
+  @Input('highlight') bgColor = '';
 
   constructor(private el: ElementRef) {
     el.nativeElement.style.customProperty = true;
@@ -4621,7 +4618,7 @@ export class TitleCasePipe implements PipeTransform {
 Copyright Google LLC. All Rights Reserved.
 Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
-*/"><input type="hidden" name="files[src/app/twain/quote.ts]" value="export class Quote {
+*/"><input type="hidden" name="files[src/app/twain/quote.ts]" value="export interface Quote {
   id: number;
   quote: string;
 }
@@ -4893,8 +4890,8 @@ import { TwainService } from './twain.service';
 
 })
 export class TwainComponent implements OnInit {
-  errorMessage: string;
-  quote: Observable<string>;
+  errorMessage!: string;
+  quote!: Observable<string>;
 
   constructor(private twainService: TwainService) {}
 
@@ -5021,7 +5018,7 @@ describe('WelcomeComponent (class only)', () => {
   });
 
   it('should not have welcome message after construction', () => {
-    expect(comp.welcome).toBeUndefined();
+    expect(comp.welcome).toBe('');
   });
 
   it('should welcome logged in user after Angular calls ngOnInit', () => {
@@ -5118,7 +5115,7 @@ import { UserService } from '../model/user.service';
   template: '<h3 class=&quot;welcome&quot;><i>{{welcome}}</i></h3>'
 })
 export class WelcomeComponent implements OnInit {
-  welcome: string;
+  welcome = '';
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
@@ -5341,11 +5338,13 @@ import { getTestHeroes } from './test-heroes';
 export class TestHeroService extends HeroService {
 
   constructor() {
-    super(null);
+    // This is a fake testing service that won't be making HTTP
+    // requests so we can pass in `null` as the HTTP client.
+    super(null!);
   }
 
   heroes = getTestHeroes();
-  lastResult: Observable<any>; // result from last method call
+  lastResult!: Observable<any>; // result from last method call
 
   addHero(hero: Hero): Observable<Hero> {
     throw new Error('Method not implemented.');
@@ -5364,7 +5363,8 @@ export class TestHeroService extends HeroService {
       id = parseInt(id, 10);
     }
     const hero = this.heroes.find(h => h.id === id);
-    return this.lastResult = asyncData(hero);
+    this.lastResult = asyncData(hero);
+    return this.lastResult;
   }
 
   updateHero(hero: Hero): Observable<Hero> {
@@ -5575,6 +5575,13 @@ function elementText(n: any): string {
 
   return n.textContent;
 }
+
+
+/*
+Copyright Google LLC. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that
+can be found in the LICENSE file at https://angular.io/license
+*/"><input type="hidden" name="files[src/testing/jasmine.d.ts]" value="declare module 'jasmine-core/lib/jasmine-core/jasmine.js';
 
 
 /*
@@ -5851,6 +5858,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

@@ -320,7 +320,7 @@ export class SelectivePreloadingStrategyService implements PreloadingStrategy {
   preloadedModules: string[] = [];
 
   preload(route: Route, load: () => Observable<any>): Observable<any> {
-    if (route.data &amp;&amp; route.data.preload) {
+    if (route.data &amp;&amp; route.data.preload &amp;&amp; route.path != null) {
       // add the route path to the preloaded module array
       this.preloadedModules.push(route.path);
 
@@ -564,12 +564,12 @@ export class AuthService {
   isLoggedIn = false;
 
   // store the URL so we can redirect after logging in
-  redirectUrl: string;
+  redirectUrl: string | null = null;
 
   login(): Observable<boolean> {
     return of(true).pipe(
       delay(1000),
-      tap(val => this.isLoggedIn = true)
+      tap(() => this.isLoggedIn = true)
     );
   }
 
@@ -592,8 +592,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./compose-message.component.css']
 })
 export class ComposeMessageComponent {
-  details: string;
-  message: string;
+  details = '';
+  message = '';
   sending = false;
 
   constructor(private router: Router) {}
@@ -728,7 +728,7 @@ export class CrisisDetailResolverService implements Resolve<Crisis> {
   constructor(private cs: CrisisService, private router: Router) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Crisis> | Observable<never> {
-    const id = route.paramMap.get('id');
+    const id = route.paramMap.get('id')!;
 
     return this.cs.getCrisis(id).pipe(
       take(1),
@@ -770,7 +770,7 @@ export class CrisisService {
 
   getCrisis(id: number | string) {
     return this.getCrises().pipe(
-      map(crises => crises.find(crisis => crisis.id === +id))
+      map(crises => crises.find(crisis => crisis.id === +id)!)
     );
   }
 
@@ -789,7 +789,7 @@ export class CrisisService {
 Copyright Google LLC. All Rights Reserved.
 Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
-*/"><input type="hidden" name="files[src/app/crisis-center/crisis.ts]" value="export class Crisis {
+*/"><input type="hidden" name="files[src/app/crisis-center/crisis.ts]" value="export interface Crisis {
   id: number;
   name: string;
 }
@@ -838,7 +838,7 @@ export class HeroService {
   getHero(id: number | string) {
     return this.getHeroes().pipe(
       // (+) before `id` turns the string into a number
-      map((heroes: Hero[]) => heroes.find(hero => hero.id === +id))
+      map((heroes: Hero[]) => heroes.find(hero => hero.id === +id)!)
     );
   }
 }
@@ -983,9 +983,9 @@ import { SelectivePreloadingStrategyService } from '../../selective-preloading-s
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
-  sessionId: Observable<string>;
-  token: Observable<string>;
-  modules: string[];
+  sessionId!: Observable<string>;
+  token!: Observable<string>;
+  modules: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -1053,18 +1053,18 @@ export class LoginComponent {
   message: string;
 
   constructor(public authService: AuthService, public router: Router) {
-    this.setMessage();
+    this.message = this.getMessage();
   }
 
-  setMessage() {
-    this.message = 'Logged ' + (this.authService.isLoggedIn ? 'in' : 'out');
+  getMessage() {
+    return 'Logged ' + (this.authService.isLoggedIn ? 'in' : 'out');
   }
 
   login() {
     this.message = 'Trying to log in ...';
 
     this.authService.login().subscribe(() => {
-      this.setMessage();
+      this.message = this.getMessage();
       if (this.authService.isLoggedIn) {
         // Usually you would use the redirect URL from the auth service.
         // However to keep the example simple, we will always redirect to `/admin`.
@@ -1085,7 +1085,7 @@ export class LoginComponent {
 
   logout() {
     this.authService.logout();
-    this.setMessage();
+    this.message = this.getMessage();
   }
 }
 
@@ -1122,7 +1122,7 @@ export class CrisisCenterHomeComponent { }
 Copyright Google LLC. All Rights Reserved.
 Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
-*/"><input type="hidden" name="files[src/app/crisis-center/crisis-detail/crisis-detail.component.ts]" value="import { Component, OnInit, HostBinding } from '@angular/core';
+*/"><input type="hidden" name="files[src/app/crisis-center/crisis-detail/crisis-detail.component.ts]" value="import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -1135,8 +1135,8 @@ import { DialogService } from '../../dialog.service';
   styleUrls: ['./crisis-detail.component.css']
 })
 export class CrisisDetailComponent implements OnInit {
-  crisis: Crisis;
-  editName: string;
+  crisis!: Crisis;
+  editName = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -1146,9 +1146,10 @@ export class CrisisDetailComponent implements OnInit {
 
   ngOnInit() {
     this.route.data
-      .subscribe((data: { crisis: Crisis }) => {
-        this.editName = data.crisis.name;
-        this.crisis = data.crisis;
+      .subscribe(data => {
+        const crisis: Crisis = data.crisis;
+        this.editName = crisis.name;
+        this.crisis = crisis;
       });
   }
 
@@ -1200,8 +1201,8 @@ import { switchMap } from 'rxjs/operators';
   styleUrls: ['./crisis-list.component.css']
 })
 export class CrisisListComponent implements OnInit {
-  crises$: Observable<Crisis[]>;
-  selectedId: number;
+  crises$!: Observable<Crisis[]>;
+  selectedId = 0;
 
   constructor(
     private service: CrisisService,
@@ -1211,7 +1212,7 @@ export class CrisisListComponent implements OnInit {
   ngOnInit() {
     this.crises$ = this.route.paramMap.pipe(
       switchMap(params => {
-        this.selectedId = +params.get('id');
+        this.selectedId = parseInt(params.get('id')!, 10);
         return this.service.getCrises();
       })
     );
@@ -1237,7 +1238,7 @@ import { Hero } from '../hero';
   styleUrls: ['./hero-detail.component.css']
 })
 export class HeroDetailComponent implements OnInit {
-  hero$: Observable<Hero>;
+  hero$!: Observable<Hero>;
 
   constructor(
     private route: ActivatedRoute,
@@ -1249,7 +1250,7 @@ export class HeroDetailComponent implements OnInit {
   ngOnInit() {
     this.hero$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) =>
-        this.service.getHero(params.get('id')))
+        this.service.getHero(params.get('id')!))
     );
   }
 
@@ -1282,8 +1283,8 @@ import { Hero } from '../hero';
   styleUrls: ['./hero-list.component.css']
 })
 export class HeroListComponent implements OnInit {
-  heroes$: Observable<Hero[]>;
-  selectedId: number;
+  heroes$!: Observable<Hero[]>;
+  selectedId = 0;
 
   constructor(
     private service: HeroService,
@@ -1293,8 +1294,7 @@ export class HeroListComponent implements OnInit {
   ngOnInit() {
     this.heroes$ = this.route.paramMap.pipe(
       switchMap(params => {
-        // (+) before `params.get()` turns the string into a number
-        this.selectedId = +params.get('id');
+        this.selectedId = parseInt(params.get('id')!, 10);
         return this.service.getHeroes();
       })
     );
@@ -1976,6 +1976,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,
@@ -1998,7 +1999,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;strictTemplates&quot;: true,
     &quot;enableIvy&quot;: true
   }
-}"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="router"><input type="hidden" name="description" value="Angular Example - Router"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;}"></form>
+}"><input type="hidden" name="tags[0]" value="angular"><input type="hidden" name="tags[1]" value="example"><input type="hidden" name="tags[2]" value="router"><input type="hidden" name="description" value="Angular Example - Router"><input type="hidden" name="dependencies" value="{&quot;@angular/animations&quot;:&quot;~12.0.0&quot;,&quot;@angular/common&quot;:&quot;~12.0.0&quot;,&quot;@angular/compiler&quot;:&quot;~12.0.0&quot;,&quot;@angular/core&quot;:&quot;~12.0.0&quot;,&quot;@angular/forms&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser&quot;:&quot;~12.0.0&quot;,&quot;@angular/platform-browser-dynamic&quot;:&quot;~12.0.0&quot;,&quot;@angular/router&quot;:&quot;~12.0.0&quot;,&quot;angular-in-memory-web-api&quot;:&quot;~0.11.0&quot;,&quot;rxjs&quot;:&quot;~6.6.0&quot;,&quot;tslib&quot;:&quot;^2.0.0&quot;,&quot;zone.js&quot;:&quot;~0.11.4&quot;,&quot;jasmine-core&quot;:&quot;~3.7.0&quot;}"></form>
         <script>
           var embedded = 'ctl=1';
           var isEmbedded = window.location.search.indexOf(embedded) > -1;

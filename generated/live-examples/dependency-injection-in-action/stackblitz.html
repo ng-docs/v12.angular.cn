@@ -242,7 +242,7 @@ import { HeroCacheService } from './hero-cache.service';
 })
 
 export class HeroBioComponent implements OnInit  {
-  @Input() heroId: number;
+  @Input() heroId = 0;
 
   constructor(private heroCache: HeroCacheService) { }
 
@@ -303,7 +303,7 @@ import { HeroService } from './hero.service';
 
 @Injectable()
 export class HeroCacheService {
-  hero: Hero;
+  hero!: Hero;
   constructor(private heroService: HeroService) {}
 
   fetchCachedHero(id: number) {
@@ -440,7 +440,7 @@ export class HeroService {
  ];
 
   getHeroById(id: number): Hero {
-    return this.heroes.find(hero => hero.id === id);
+    return this.heroes.find(hero => hero.id === id)!;
   }
 
   getAllHeroes(): Array<Hero> {
@@ -474,7 +474,7 @@ can be found in the LICENSE file at https://angular.io/license
 })
 export class HighlightDirective {
 
-  @Input('appHighlight') highlightColor: string;
+  @Input('appHighlight') highlightColor = '';
 
   private el: HTMLElement;
 
@@ -487,7 +487,7 @@ export class HighlightDirective {
   }
 
   @HostListener('mouseleave') onMouseLeave() {
-    this.highlight(null);
+    this.highlight('');
   }
 
   private highlight(color: string) {
@@ -526,8 +526,8 @@ can be found in the LICENSE file at https://angular.io/license
 */"><input type="hidden" name="files[src/app/minimal-logger.service.ts]" value="// Class used as a &quot;narrowing&quot; interface that exposes a minimal logger
 // Other members of the actual implementation are invisible
 export abstract class MinimalLogger {
-  logs: string[];
-  logInfo: (msg: string) => void;
+  abstract logs: string[];
+  abstract logInfo: (msg: string) => void;
 }
 
 /*
@@ -554,7 +554,7 @@ import { Component, forwardRef, Optional, SkipSelf } from '@angular/core';
 export abstract class Base { name = 'Count Basie'; }
 
 // Marker class, used as an interface
-export abstract class Parent { name: string; }
+export abstract class Parent { abstract name: string; }
 
 const DifferentParent = Parent;
 
@@ -761,7 +761,7 @@ import { HeroService } from './hero.service';
 export class HeroesBaseComponent implements OnInit {
   constructor(private heroService: HeroService) { }
 
-  heroes: Array<Hero>;
+  heroes: Hero[] = [];
 
   ngOnInit() {
     this.heroes = this.heroService.getAllHeroes();
@@ -884,8 +884,8 @@ import { UserService } from './user.service';
   providedIn: 'root'
 })
 export class UserContextService {
-  name: string;
-  role: string;
+  name = '';
+  role = '';
   loggedInSince: Date;
 
   constructor(private userService: UserService, private loggerService: LoggerService) {
@@ -1294,6 +1294,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

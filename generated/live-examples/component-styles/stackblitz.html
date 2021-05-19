@@ -129,7 +129,7 @@ import { Hero } from './hero';
   `
 })
 export class HeroAppMainComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 }
 
 
@@ -181,7 +181,7 @@ import { Hero } from './hero';
   `
 })
 export class HeroControlsComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 
   activate() {
     this.hero.active = true;
@@ -206,7 +206,7 @@ import { Hero } from './hero';
   styleUrls: ['./hero-details.component.css']
 })
 export class HeroDetailsComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 }
 
 
@@ -230,7 +230,7 @@ import { Hero } from './hero';
     </ul>`
 })
 export class HeroTeamComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 }
 
 
@@ -239,7 +239,7 @@ Copyright Google LLC. All Rights Reserved.
 Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
 */"><input type="hidden" name="files[src/app/hero.ts]" value="export class Hero {
-  active: boolean;
+  active = false;
 
   constructor(public name: string,
               public team: string[]) {
@@ -623,6 +623,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

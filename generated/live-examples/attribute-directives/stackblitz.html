@@ -93,7 +93,7 @@ can be found in the LICENSE file at https://angular.io/license
   templateUrl: './app.component.html'
 })
 export class AppComponent {
-  color: string;
+  color = '';
 }
 
 
@@ -146,16 +146,16 @@ export class HighlightDirective {
 
   constructor(private el: ElementRef) { }
 
-  @Input() defaultColor: string;
+  @Input() defaultColor = '';
 
-  @Input('appHighlight') highlightColor: string;
+  @Input('appHighlight') highlightColor = '';
 
   @HostListener('mouseenter') onMouseEnter() {
     this.highlight(this.highlightColor || this.defaultColor || 'red');
   }
 
   @HostListener('mouseleave') onMouseLeave() {
-    this.highlight(null);
+    this.highlight('');
   }
 
   private highlight(color: string) {
@@ -485,6 +485,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

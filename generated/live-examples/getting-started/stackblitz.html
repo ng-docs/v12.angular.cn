@@ -151,18 +151,19 @@ Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
 */"><input type="hidden" name="files[src/app/cart.service.ts]" value="import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Product } from './products';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  items = [];
+  items: Product[] = [];
 
   constructor(
     private http: HttpClient
   ) {}
 
-  addToCart(product) {
+  addToCart(product: Product) {
     this.items.push(product);
   }
 
@@ -185,7 +186,14 @@ export class CartService {
 Copyright Google LLC. All Rights Reserved.
 Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
-*/"><input type="hidden" name="files[src/app/products.ts]" value="export const products = [
+*/"><input type="hidden" name="files[src/app/products.ts]" value="export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+}
+
+export const products: Product[] = [
   {
     id: 1,
     name: 'Phone XL',
@@ -279,6 +287,7 @@ can be found in the LICENSE file at https://angular.io/license
 */"><input type="hidden" name="files[src/app/product-alerts/product-alerts.component.ts]" value="import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
+import { Product } from '../products';
 
 @Component({
   selector: 'app-product-alerts',
@@ -286,7 +295,7 @@ import { Output, EventEmitter } from '@angular/core';
   styleUrls: ['./product-alerts.component.css']
 })
 export class ProductAlertsComponent {
-  @Input() product;
+  @Input() product!: Product;
   @Output() notify = new EventEmitter();
 }
 
@@ -298,7 +307,7 @@ can be found in the LICENSE file at https://angular.io/license
 */"><input type="hidden" name="files[src/app/product-details/product-details.component.ts]" value="import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { products } from '../products';
+import { Product, products } from '../products';
 import { CartService } from '../cart.service';
 
 @Component({
@@ -307,7 +316,7 @@ import { CartService } from '../cart.service';
   styleUrls: ['./product-details.component.css']
 })
 export class ProductDetailsComponent implements OnInit {
-  product;
+  product: Product|undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -323,7 +332,7 @@ export class ProductDetailsComponent implements OnInit {
     this.product = products.find(product => product.id === productIdFromRoute);
   }
 
-  addToCart(product) {
+  addToCart(product: Product) {
     this.cartService.addToCart(product);
     window.alert('Your product has been added to the cart!');
   }
@@ -875,6 +884,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

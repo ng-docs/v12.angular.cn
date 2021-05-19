@@ -179,7 +179,7 @@ import { Hero } from './hero';
   templateUrl: './hero-detail.component.html'
 })
 export class HeroDetailComponent {
-  @Input() hero: Hero;
+  @Input() hero!: Hero;
 }
 
 
@@ -198,8 +198,8 @@ import { HeroService } from './hero.service';
   providers:  [ HeroService ]
 })
 export class HeroListComponent implements OnInit {
-  heroes: Hero[];
-  selectedHero: Hero;
+  heroes: Hero[] = [];
+  selectedHero: Hero | undefined;
 
   constructor(private service: HeroService) { }
 
@@ -714,6 +714,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

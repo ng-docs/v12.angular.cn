@@ -115,8 +115,8 @@ export class AppComponent {
     alert('Click me.' + evtMsg);
   }
 
-  getValue(target: EventTarget): string {
-    return (target as HTMLInputElement).value;
+  getValue(event: Event): string {
+    return (event.target as HTMLInputElement).value;
   }
 }
 
@@ -178,7 +178,7 @@ Copyright Google LLC. All Rights Reserved.
 Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
 */"><input type="hidden" name="files[src/app/item.ts]" value="export class Item {
-  name: '';
+  name = '';
 }
 
 
@@ -230,7 +230,7 @@ import { Item } from '../item';
 })
 export class ItemDetailComponent {
 
-  @Input() item;
+  @Input() item!: Item;
   itemImageUrl = 'assets/teapot.svg';
   lineThrough = '';
   displayNone = '';
@@ -426,7 +426,7 @@ can be found in the LICENSE file at https://angular.io/license
   <h4>Result: {{currentItem.name}}</h4>
 
   <input [value]=&quot;currentItem.name&quot;
-         (input)=&quot;currentItem.name=getValue($event.target)&quot;>
+         (input)=&quot;currentItem.name=getValue($event)&quot;>
   without NgModel
 </div>
 
@@ -608,6 +608,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

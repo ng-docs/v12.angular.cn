@@ -172,7 +172,7 @@ can be found in the LICENSE file at https://angular.io/license
 })
 export class SizerComponent {
 
-  @Input()  size: number | string;
+  @Input()  size!: number | string;
   @Output() sizeChange = new EventEmitter<number>();
 
   dec() { this.resize(-1); }
@@ -477,6 +477,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,

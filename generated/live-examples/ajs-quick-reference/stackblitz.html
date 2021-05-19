@@ -125,7 +125,7 @@ export class AppComponent {
   eventType = '<not clicked yet>';
   isActive = true;
   isImportant = true;
-  movie: IMovie = null;
+  movie: IMovie;
   movies: IMovie[] = [];
   showImage = true;
   title = 'AngularJS to Angular Quick Ref Cookbook';
@@ -172,8 +172,7 @@ export class AppModule { }
 Copyright Google LLC. All Rights Reserved.
 Use of this source code is governed by an MIT-style license that
 can be found in the LICENSE file at https://angular.io/license
-*/"><input type="hidden" name="files[src/app/movie-list.component.ts]" value="/* tslint:disable:no-unused-variable */
-import { Component } from '@angular/core';
+*/"><input type="hidden" name="files[src/app/movie-list.component.ts]" value="import { Component } from '@angular/core';
 import { IMovie } from './movie';
 import { MovieService } from './movie.service';
 
@@ -183,7 +182,7 @@ import { MovieService } from './movie.service';
   styleUrls: [ './movie-list.component.css' ],
 })
 export class MovieListComponent {
-  favoriteHero: string;
+  favoriteHero: string | undefined;
   showImage = false;
   movies: IMovie[];
 
@@ -774,6 +773,7 @@ can be found in the LICENSE file at https://angular.io/license
     &quot;baseUrl&quot;: &quot;./&quot;,
     &quot;outDir&quot;: &quot;./dist/out-tsc&quot;,
     &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;strict&quot;: true,
     &quot;noImplicitReturns&quot;: true,
     &quot;noFallthroughCasesInSwitch&quot;: true,
     &quot;sourceMap&quot;: true,
